@@ -28,15 +28,21 @@ alumno=[
 ingenieria_sistemas=0
 ingenieria_tecnologias=0
 ingenieria_mecatronica=0
-if "ingenieria en sistemas computacionales" in alumno:
-    ingenieria_sistemas+=1
-if "ingenieria en tecnologias de la informacion" in alumno:
-    ingenieria_tecnologias+=1
-if "ingenieria en mecatronica" in alumno:
-    ingenieria_mecatronica+=1
-enumerated_cursos=list(enumerate(cursos))
-
-print ("Estos son los cursos que ofrecemos:"  + str(cursos))
+for alumno_info in alumno:
+    if "ingenieria en sistemas computacionales" in alumno_info.lower():
+        ingenieria_sistemas += 1
+    elif "ingenieria en tecnologias de la informacion" in alumno_info.lower():
+        ingenieria_tecnologias += 1
+    elif "ingenieria en mecatronica" in alumno_info.lower():
+        ingenieria_mecatronica += 1
+    else :
+        pass
+def mostrar_iguales():
+    print("================================")  
+print ("Estos son los cursos que ofrecemos:")
+print ("================================")
+print(cursos)
+print ("================================")
 deseas_modificarlos=input("deseas modificarlos? s/n:").lower()
 while deseas_modificarlos=="si" or deseas_modificarlos=="s":
     que_deseas_hacer=input("que deseas hacer? agregar/eliminar/modificar:").lower()
@@ -44,12 +50,18 @@ while deseas_modificarlos=="si" or deseas_modificarlos=="s":
         nuevo_curso=input("cual curso deseas agregar?:")
         cursos.append(nuevo_curso)
         print("El curso ha sido agregado exitosamente")
-        print("Los cursos actualizados son:" + str(cursos))
+        print("Los cursos actualizados son:")
+        print("===============================")
+        print(cursos)
+        print("===============================")
     elif que_deseas_hacer=="eliminar":
         curso_a_eliminar=input("cual curso deseas eliminar?: ")
         cursos.remove(curso_a_eliminar)
         print("el curso ha sido eliminado exitosamente ")
-        print("Los cursos actualizados son:" + str(cursos))
+        print("Los cursos actualizados son:")
+        print("===============================")
+        print(cursos)
+        print("===============================")
     elif que_deseas_hacer=="modificar":
         curso_a_modificar=input("cual curso deseas modificar?")
         nuevo_nombre_curso=input("cual es el nuevo nombre del curso?:")
@@ -57,7 +69,10 @@ while deseas_modificarlos=="si" or deseas_modificarlos=="s":
         print(indice)
         print ("El curso ha sido modificado exitosamente")
         cursos[indice]=nuevo_nombre_curso
-        print("Los cursos actualizados son:" + str(cursos))
+        print("Los cursos actualizados son:")
+        print("===============================")
+        print(cursos)
+        print("===============================")
     else:
         print("opcion no valida")
     deseas_modificarlos=input("deseas seguir modificando los cursos? s/n:").lower()
@@ -71,24 +86,28 @@ if deseas_conocer_alumnos=="si" or deseas_conocer_alumnos=="s":
     print((alumno))
     desesa_modificar_alumnos=input("deseas modificar algun alumno? s/n:").lower()
     while desesa_modificar_alumnos=="si" or desesa_modificar_alumnos=="s":
-        alumnos_modicador=input("cual alumno deseas modificar?:")
-        if alumnos_modicador in alumno:
-            nuevo_alumno=input("cual es el nuevo nombre del alumno y su curso?:")
-            indice_alumno=alumno.index(alumnos_modicador)
-            alumno[indice_alumno]=nuevo_alumno
-            print("El alumno ha sido modificado exitosamente")
+        que_deseas_hacer_alumno=input("que deseas hacer? agregar/eliminar/modificar:").lower()
+        if que_deseas_hacer_alumno=="agregar":
+            nuevo_alumno=input("cual alumno deseas agregar?:")
+            alumno.append(nuevo_alumno)
+            print("El alumno ha sido agregado exitosamente")
             print("Los alumnos actualizados son:" + str(alumno))
-            desea_agregar_alumno=input("deseas agregar un nuevo alumno? s/n:").lower()
-            if desea_agregar_alumno=="si" or desea_agregar_alumno=="s":
-                nuevo_alumno_agregar=input("cual es el nombre del nuevo alumno y su curso?:")
-                alumno.append(nuevo_alumno_agregar)
-                print("El alumno ha sido agregado exitosamente")
-                print("Los alumnos actualizados son:" + str(alumno))
-            else:
-                print("Gracias por visitar la lista de alumnos")
+        elif que_deseas_hacer_alumno=="eliminar":
+            alumno_a_eliminar=input("cual alumno deseas eliminar?: ")
+            alumno.remove(alumno_a_eliminar)
+            print("el alumno ha sido eliminado exitosamente ")
+            print("Los alumnos actualizados son:" + str(alumno))
+        elif que_deseas_hacer_alumno=="modificar":
+            alumno_a_modificar=input("cual alumno deseas modificar?")
+            nuevo_nombre_alumno=input("cual es el nuevo nombre del alumno?:")
+            indice_alumno=alumno.index(alumno_a_modificar)
+            print(indice_alumno)
+            print ("El alumno ha sido modificado exitosamente")
+            alumno[indice_alumno]=nuevo_nombre_alumno
+            print("Los alumnos actualizados son:" + str(alumno))
         else:
-            print("El alumno no se encuentra en la lista")
-        desesa_modificar_alumnos=input("deseas seguir modificando algun alumno? s/n:").lower()
+            print("opcion no valida")
+        desesa_modificar_alumnos=input("deseas seguir modificando los alumnos? s/n:").lower()       
 else:
     print("Gracias por visitar la lista de alumnos")
 print("Conteo de alumnos por curso:")
