@@ -1,0 +1,153 @@
+import time
+from colorama import init, Fore, Style
+
+init(autoreset=True)
+
+listado_procesos = []
+
+contador_pid = 1
+
+def crear_proceso(nombre):
+    global contador_pid
+
+    nuevo_proceso = {
+        "pid": contador_pid,
+        "nombre": nombre,
+        "estado": "Listo"
+    }
+
+    listado_procesos.append(nuevo_proceso)
+    contador_pid += 1
+    print(Fore.GREEN + f"Proceso '{nombre}' creado con PID {nuevo_proceso['pid']}.")
+
+def mostrar_procesos():
+    if not listado_procesos:
+        print(Fore.YELLOW + "No hay procesos en el sistema.")
+        return
+
+    print(Fore.CYAN + "\nLista de Procesos:")
+
+    for proceso in listado_procesos:
+        if proceso["estado"] == "Ejecutando":
+            color = Fore.BLUE
+        elif proceso["estado"] == "Terminado":
+            color = Fore.GREEN
+        else:
+            color = Fore.WHITE
+
+        print(color + f"  PID: {proceso['pid']} | Nombre: {proceso['nombre']} | Estado: {proceso['estado']}")
+
+def eliminar_proceso(pid):
+    for proceso in listado_procesos:
+        if proceso["pid"] == pid:
+            listado_procesos.remove(proceso)
+            print(Fore.GREEN + f"Proceso con PID {pid} eliminado.")
+            return
+
+    print(Fore.RED + f"No se encontro ningun proceso con PID {pid}.")
+
+def ejecutar_fcfs():
+    listos = [p for p in listado_procesos if p["estado"] == "Listo"]
+
+    if not listos:
+        print(Fore.YELLOW + "No hay procesos listos para ejecutar.")
+        return
+
+    print(Fore.CYAN + "\nEjecutando procesos con FCFS...")
+
+    for proceso in listos:
+        proceso["estado"] = "Ejecutando"
+        print(Fore.BLUE + f"  Ejecutando: PID {proceso['pid']} - {proceso['nombre']}")
+        time.sleep(1)
+
+        proceso["estado"] = "Terminado"
+        print(Fore.GREEN + f"  Proceso PID {proceso['pid']} terminado.")
+
+    print(Fore.GREEN + "\nTodos los procesos fueron ejecutados.")
+
+def ejecutar_round_robin():
+    listos = [p for p in listado_procesos if p["estado"] == "Listo"]
+
+    if not listos:
+        print(Fore.YELLOW + "No hay procesos listos para ejecutar.")
+        return
+
+    try:
+        quantum = int(input("Ingresa el quantum (segundos por turno): "))
+    except ValueError:
+        print(Fore.RED + "Quantum invalido.")
+        return
+
+    for proceso in listos:
+        proceso["tiempo_restante"] = 2
+
+    print(Fore.CYAN + f"\nEjecutando procesos con Round Robin (quantum={quantum}s)...")
+
+    while any(p["tiempo_restante"] > 0 for p in listos):
+        for proceso in listos:
+            if proceso["tiempo_restante"] <= 0:
+                continue 
+
+            proceso["estado"] = "Ejecutando"
+            print(Fore.BLUE + f"  Turno: PID {proceso['pid']} - {proceso['nombre']} | Tiempo restante: {proceso['tiempo_restante']}")
+            time.sleep(quantum)
+
+            proceso["tiempo_restante"] -= 1
+
+            if proceso["tiempo_restante"] <= 0:
+                proceso["estado"] = "Terminado"
+                print(Fore.GREEN + f"  Proceso PID {proceso['pid']} terminado.")
+            else:
+                proceso["estado"] = "Listo"
+
+    print(Fore.GREEN + "\nTodos los procesos fueron ejecutados.")
+
+def menu():
+    print(Fore.CYAN + "\nSimulador de Sistema Operativo")
+    print("1. Crear proceso")
+    print("2. Mostrar procesos")
+    print("3. Eliminar proceso")
+    print("4. Ejecutar (FCFS)")
+    print("5. Ejecutar (Round Robin)")
+    print("6. Salir")
+
+def main():
+    print(Fore.CYAN + "Bienvenido al Simulador de Sistema Operativo")
+
+    while True:
+        menu()
+        opcion = input("\nElige una opcion: ").strip()
+
+        if opcion == "1":
+            nombre = input("Nombre del proceso: ").strip()
+            if nombre:
+                crear_proceso(nombre)
+            else:
+                print(Fore.RED + "El nombre no puede estar vacio.")
+
+        elif opcion == "2":
+            mostrar_procesos()
+
+        elif opcion == "3":
+            mostrar_procesos()
+            try:
+                pid = int(input("PID del proceso a eliminar: "))
+                eliminar_proceso(pid)
+            except ValueError:
+                print(Fore.RED + "Ingresa un numero valido.")
+
+        elif opcion == "4":
+            ejecutar_fcfs()
+
+        elif opcion == "5":
+            ejecutar_round_robin()
+
+        elif opcion == "6":
+            print(Fore.CYAN + "Hasta luego.")
+            break
+
+        else:
+            print(Fore.RED + "Opcion no valida.")
+
+
+main()
